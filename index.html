@@ -1,20 +1,173 @@
-# 렛미플라이 관극 기록장
-
-렛미플라이 관극 일정과 관극 기록을 관리하는 개인용 웹페이지입니다.
-
-## 주요 기능
-- 공연 일정 추가, 수정, 삭제
-- 배우별 일정 필터링
-- 날짜, 시간, 공연장, 배우 및 메모 기록
-- 관극 기록과 좌석 정보 저장
-- 관극 횟수, 관극 날짜, 캐스트 조합 통계
-- 통계 카드 PNG 이미지 저장
-- JSON 데이터 백업 및 복원
-
-## 사용 방법
-`index.html` 파일을 브라우저에서 열면 사용할 수 있습니다. GitHub Pages에 배포하면 웹사이트 주소로 접속할 수 있습니다.
-
-## 데이터 안내
-데이터는 현재 브라우저의 로컬 저장소에 저장됩니다. 다른 기기와 자동으로 동기화되지 않으므로 기기를 변경하거나 브라우저 데이터를 삭제하기 전에 JSON 백업을 저장해 주세요.
-
-개인 팬 제작 페이지이며 공식 사이트가 아닙니다.
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17131d">
+<title>렛미플라이 · 관극 기록</title>
+<style>
+ :root{--bg:#f7f2e9;--paper:#fffaf0;--ink:#554334;--muted:#9a8877;--line:#e8c8c8;--wine:#31558b;--pink:#ee7c98;--gold:#c6a16a;--shadow:0 8px 22px #6b4b3010}
+*{box-sizing:border-box}body{margin:0;background-color:var(--bg);background-image:radial-gradient(#c7b7a333 .8px,transparent .8px),linear-gradient(135deg,#fffaf2,#f5eee2);background-size:9px 9px,100% 100%;color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#fffaf0;color:var(--ink);padding:30px max(20px,calc((100vw - 1080px)/2)) 28px;position:relative;overflow:hidden;border-bottom:3px dashed #e98ba0;text-align:center}header:before{content:"✂　✦　🚀　✦　♫";display:block;color:#e97e99;font-size:18px;letter-spacing:.45em;margin-bottom:10px}header:after{content:"☾";position:absolute;right:8%;top:3px;font-size:100px;color:#31558b15;transform:rotate(-15deg)}.eyebrow{font-size:11px;letter-spacing:.22em;color:#638b54;text-transform:uppercase}h1{font-family:Georgia,"Noto Serif KR",serif;font-weight:800;font-size:clamp(38px,7vw,60px);margin:7px 0 6px;letter-spacing:-.04em;color:#765a46;text-shadow:2px 2px 0 #e9d7c4}.sub{color:#927a68;font-size:13px}.wrap{max-width:1080px;margin:auto;padding:22px 18px 60px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:0}.stat{background:var(--paper);padding:17px 18px;border:1px solid #e7d9c7;border-radius:4px;box-shadow:var(--shadow);position:relative}.stat:before{content:"✦";position:absolute;right:12px;top:8px;color:#e98ba0;font-size:15px}.stat b{display:block;font-size:26px;color:var(--wine);font-weight:750}.stat span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:22px 0 15px}.tab{white-space:nowrap;border:1px solid #e8c9c9;border-radius:3px;background:#fffaf0;padding:10px 16px;color:#927a68;cursor:pointer}.tab.active{background:#31558b;border-color:#31558b;color:white;box-shadow:3px 3px 0 #e98ba0}
+.panel{display:none}.panel.active{display:block}.card{background:rgba(255,250,240,.94);border:1px solid #e7d9c7;border-radius:4px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px;position:relative}.cardhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}h2{font-size:18px;margin:0;color:#765a46}h3{font-size:15px;margin:0 0 8px}.hint{color:var(--muted);font-size:12px;line-height:1.6}
+label{display:block;font-size:12px;color:#927a68;margin:0 0 6px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #e4d4c4;border-radius:3px;background:#fffdf8;color:var(--ink);font:inherit;font-size:14px;outline:none}input:focus,select:focus,textarea:focus{border-color:#31558b;box-shadow:0 0 0 3px #31558b18}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field{min-width:0}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.btn{border:1px solid #e4d4c4;border-radius:3px;background:#fffdf8;padding:10px 14px;font-size:13px;color:var(--ink);cursor:pointer}.btn.primary{background:#31558b;color:#fff;border-color:#31558b}.btn.soft{background:#fde8ed;color:#a84e69;border-color:#f3c5d1}.btn.danger{color:#a33a50}.btn.small{padding:6px 9px;font-size:12px}.list{display:grid;gap:10px}.event{display:grid;grid-template-columns:86px 1fr auto;gap:13px;align-items:start;border:1px solid #e8caca;border-radius:3px;padding:13px;background:#fffdf8}.datebox{background:#e8eef7;border-radius:2px;padding:10px 6px;text-align:center;color:#31558b;border-bottom:2px solid #e98ba0}.datebox strong{display:block;font-size:20px}.datebox span{font-size:10px}.eventtitle{font-weight:650;margin:2px 0 6px;color:#5c4636}.tag{display:inline-block;background:#f6e8e5;border-radius:2px;padding:4px 8px;font-size:11px;color:#775b4a;margin:2px 3px 2px 0}.tag.done{background:#e3efdf;color:#426c45}.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed #e7b7c3;border-radius:3px;font-size:13px}.footer{text-align:center;color:var(--muted);font-size:11px;padding-top:26px}.divider{height:1px;background:var(--line);margin:17px 0}.filelabel{display:inline-flex;align-items:center;gap:8px}
+@media(max-width:650px){header{padding-top:24px}.stats{gap:7px}.stat{padding:13px 10px}.stat b{font-size:22px}.stat span{font-size:10px}.grid,.grid.three{grid-template-columns:1fr 1fr}.event{grid-template-columns:64px 1fr}.event>.eventactions{grid-column:2}.datebox strong{font-size:17px}.card{padding:15px}.event{gap:9px;padding:10px}}
+@media(max-width:420px){.grid,.grid.three{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">MUSICAL · LET ME FLY</div><h1>렛미플라이</h1><div class="sub">평범한 오늘 시작된 특별한 시간여행 · 나의 관극 기록</div><div style="margin-top:14px;font-size:12px;color:#31558b;letter-spacing:.16em">✦ 나의 관극 다이어리 ✦</div></header>
+<main class="wrap">
+<section class="stats">
+ <div class="stat"><b id="statSeen">0</b><span>관극 횟수</span></div>
+ <div class="stat"><b id="statShows">0</b><span>관극한 날짜</span></div>
+ <div class="stat"><b id="statCast">0</b><span>기록한 캐스트 조합</span></div>
+</section>
+<nav class="tabs" aria-label="페이지 메뉴">
+ <button class="tab active" data-tab="schedule">공연 일정</button><button class="tab" data-tab="records">관극 기록</button><button class="tab" data-tab="stats">통계 및 내보내기</button><button class="tab" data-tab="backup">백업 및 설정</button>
+</nav>
+<section id="schedule" class="panel active">
+ <div class="card">
+  <div class="cardhead"><h2>공연 일정</h2><button class="btn soft" id="toggleEventForm">＋ 공연 추가</button></div>
+  <div class="grid">
+   <div class="field"><label for="castFilter">배우별 필터</label><select id="castFilter"><option value="">전체 배우</option></select></div>
+   <div class="field"><label for="scheduleFilter">보기</label><select id="scheduleFilter"><option value="all">전체 공연</option><option value="upcoming">아직 관극하지 않은 공연</option><option value="seen">관극 완료 공연</option></select></div>
+  </div>
+  <div id="eventFormWrap" hidden>
+   <div class="divider"></div><h3 id="eventFormTitle">공연 일정 추가</h3>
+   <form id="eventForm">
+    <input type="hidden" id="eventId">
+    <div class="grid three">
+     <div class="field"><label for="eventDate">날짜</label><input id="eventDate" type="date" required></div>
+     <div class="field"><label for="eventTime">시간</label><select id="eventTime"><option>14:00</option><option>15:00</option><option>19:00</option><option>19:30</option><option>20:00</option><option>其他</option></select></div>
+     <div class="field"><label for="eventVenue">공연장</label><input id="eventVenue" placeholder="예: 두산아트센터 연강홀"></div>
+    </div>
+    <div class="grid three" style="margin-top:13px">
+     <div class="field"><label for="eventActor1">배우 1</label><input id="eventActor1" placeholder="배우 이름"></div>
+     <div class="field"><label for="eventActor2">배우 2</label><input id="eventActor2" placeholder="배우 이름"></div>
+     <div class="field"><label for="eventActor3">배우 3 / 기타</label><input id="eventActor3" placeholder="배우 이름"></div>
+    </div>
+    <div class="field" style="margin-top:13px"><label for="eventMemo">메모 (선택)</label><input id="eventMemo" placeholder="例如： 낮공 / 막공 / 양도받음"></div>
+    <div class="actions"><button class="btn primary" type="submit">공연 저장</button><button class="btn" type="button" id="cancelEvent">취소</button></div>
+   </form>
+  </div>
+ </div>
+ <div id="eventList" class="list"></div>
+</section>
+<section id="records" class="panel">
+ <div class="card"><div class="cardhead"><h2>관극 기록 / My records</h2><span class="hint">공연마다 좌석 정보를 기록할 수 있어요</span></div>
+ <form id="recordForm">
+  <div class="grid">
+   <div class="field"><label for="recordEvent">공연 선택</label><select id="recordEvent" required></select></div>
+   <div class="field"><label for="recordDate">관극 날짜 (직접 입력 가능)</label><input id="recordDate" type="date" required></div>
+  </div>
+  <div class="grid three" style="margin-top:13px">
+   <div class="field"><label for="seatArea">구역</label><input id="seatArea" placeholder="예: A구역"></div>
+   <div class="field"><label for="seatRow">열</label><input id="seatRow" placeholder="예: 3열"></div>
+   <div class="field"><label for="seatNumber">좌석 번호</label><input id="seatNumber" placeholder="예: 12번"></div>
+  </div>
+  <div class="grid" style="margin-top:13px">
+   <div class="field"><label for="recordTicket">좌석 등급 / 티켓 정보 (선택)</label><input id="recordTicket" placeholder="예: R석 / 40%"></div>
+   <div class="field"><label for="recordMemo">관극 후기 / 메모</label><input id="recordMemo" placeholder="오늘의 관극을 기록해 보세요…"></div>
+  </div>
+  <div class="actions"><button class="btn primary" type="submit">保存관극 기록</button><button class="btn" type="button" id="clearRecord">입력 내용 지우기</button></div>
+ </form></div>
+ <div id="recordList" class="list"></div>
+</section>
+<section id="stats" class="panel">
+ <div class="card"><div class="cardhead"><h2>나의 관극 통계</h2><button class="btn primary" id="exportPng">PNG 이미지 저장</button></div>
+ <div id="exportCard" style="padding:24px;border-radius:15px;background:linear-gradient(145deg,#261c2b,#5b3049);color:#fff">
+  <div style="font-size:11px;letter-spacing:.2em;color:#eac8d9">나의 뮤지컬 기록</div><div style="font:42px Georgia,serif;margin:8px 0 4px">렛미플라이</div><div style="font-size:12px;color:#e5d5e2">나의 관극 기록</div>
+  <div class="divider" style="background:#ffffff35;margin:20px 0"></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+   <div><div id="pngSeen" style="font-size:32px">0</div><div style="font-size:11px;color:#e5d5e2">관극 횟수</div></div>
+   <div><div id="pngDates" style="font-size:32px">0</div><div style="font-size:11px;color:#e5d5e2">관극 날짜</div></div>
+   <div><div id="pngCasts" style="font-size:32px">0</div><div style="font-size:11px;color:#e5d5e2">캐스트 조합</div></div>
+  </div>
+  <div class="divider" style="background:#ffffff35;margin:20px 0"></div><div id="pngFavorite" style="font-size:13px;line-height:1.8">하나씩 관극 기록을 채워 보세요 ✦</div>
+  <div style="margin-top:18px;font-size:10px;color:#cbb7c9">사랑을 담아 · 나의 렛미플라이 관극 기록</div>
+ </div>
+ <p class="hint">이미지 저장을 누르면 위 통계 카드가 PNG 파일로 저장됩니다. 관극 상세 정보와 좌석 정보는 자동으로 공개되지 않습니다.</p>
+ </div>
+ <div class="card"><h2>배우 조합별 관극 횟수</h2><div id="castStats" class="list" style="margin-top:14px"></div></div>
+</section>
+<section id="backup" class="panel">
+ <div class="card"><h2>백업 및 복원</h2><p class="hint">데이터는 현재 브라우저에만 저장됩니다. 브라우저 데이터를 삭제하거나 기기 또는 브라우저를 변경하기 전에 JSON 백업 파일을 저장해 주세요.</p>
+ <div class="actions"><button class="btn primary" id="exportJson">JSON 백업 내보내기</button><label class="btn filelabel" for="importJson" style="margin:0;cursor:pointer">JSON 백업 가져오기</label><input id="importJson" type="file" accept="application/json,.json" hidden></div>
+ <div class="divider"></div><h3>데이터 관리</h3><p class="hint">백업을 가져오면 현재 공연 일정과 관극 기록이 백업 내용으로 대체됩니다. 먼저 현재 데이터를 백업하는 것을 권장합니다.</p>
+ <button class="btn danger" id="clearAll">모든 데이터 삭제</button></div>
+ <div class="card"><h2>이용 안내</h2><p class="hint">① ‘공연 일정’에서 공연 날짜와 배우를 추가하세요. ② ‘관극 기록’에서 공연을 선택하고 좌석과 메모를 입력하세요. ③ ‘통계 및 내보내기’에서 통계 카드를 이미지로 저장하세요. ④ 정기적으로 JSON 백업 파일을 내보내세요. 이 웹사이트에는 계정 기능이 없으며, 브라우저에 저장된 데이터는 다른 기기와 자동으로 동기화되지 않습니다.</p></div>
+</section>
+<div class="footer">렛미플라이 · 나의 관극 기록장 · 개인 팬 제작 사이트</div>
+</main>
+<script>
+const KEY='letmefly-tracker-v1';
+let data={events:[],records:[]};
+const $=id=>document.getElementById(id);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=s=>{if(!s)return '미정';const d=new Date(s+'T12:00:00');return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`};
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'{}');if(Array.isArray(x.events)&&Array.isArray(x.records))data=x}catch(e){}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function eventById(id){return data.events.find(e=>e.id===id)}
+function castName(e){return [e.actor1,e.actor2,e.actor3].filter(Boolean).join(' · ')||'배우 미입력'}
+function recordFor(id){return data.records.find(r=>r.eventId===id)}
+function updateStats(){
+ const seen=data.records.length, dates=new Set(data.records.map(r=>r.date)).size, casts=new Set(data.records.map(r=>castName(eventById(r.eventId)||{}))).size;
+ $('statSeen').textContent=seen;$('statShows').textContent=dates;$('statCast').textContent=casts;
+ $('pngSeen').textContent=seen;$('pngDates').textContent=dates;$('pngCasts').textContent=casts;
+ $('pngFavorite').textContent=seen?`${seen}회의 관극을 기록했어요. 모든 만남은 소중하니까요 ✦`:'하나씩 관극 기록을 채워 보세요 ✦';
+}
+function renderFilters(){
+ const old=$('castFilter').value;const names=[...new Set(data.events.flatMap(e=>[e.actor1,e.actor2,e.actor3]).filter(Boolean))].sort();
+ $('castFilter').innerHTML='<option value="">전체 배우</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');
+ $('castFilter').value=names.includes(old)?old:'';
+ $('recordEvent').innerHTML='<option value="">공연을 선택하세요…</option>'+[...data.events].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(e=>`<option value="${e.id}">${esc(fmtDate(e.date))} ${esc(e.time||'')} · ${esc(castName(e))}</option>`).join('');
+}
+function renderEvents(){
+ const cast=$('castFilter').value, filter=$('scheduleFilter').value;
+ let list=[...data.events].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+ if(cast)list=list.filter(e=>[e.actor1,e.actor2,e.actor3].includes(cast));
+ if(filter==='seen')list=list.filter(e=>recordFor(e.id));if(filter==='upcoming')list=list.filter(e=>!recordFor(e.id));
+ $('eventList').innerHTML=list.length?list.map(e=>{const done=!!recordFor(e.id);return `<article class="event"><div class="datebox"><strong>${e.date?esc(e.date.slice(8,10)):'—'}</strong><span>${e.date?esc(e.date.slice(0,7).replace('-','.')):'날짜 미정'}</span></div><div><div class="eventtitle">${esc(e.time||'시간待定')} · ${esc(castName(e))}</div><div>${e.venue?`<span class="tag">${esc(e.venue)}</span>`:''}${done?'<span class="tag done">관극 완료</span>':'<span class="tag">미기록</span>'}</div>${e.memo?`<div class="hint" style="margin-top:7px">${esc(e.memo)}</div>`:''}</div><div class="eventactions"><button class="btn small" onclick="editEvent('${e.id}')">수정</button> <button class="btn small danger" onclick="deleteEvent('${e.id}')">삭제</button></div></article>`}).join(''):'<div class="empty">아직 등록된 공연이 없습니다. ‘공연 추가’를 눌러 일정을 등록해 보세요. 날짜와 배우는 나중에 수정할 수 있습니다.</div>';
+}
+function renderRecords(){
+ const list=[...data.records].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+ $('recordList').innerHTML=list.length?list.map(r=>{const e=eventById(r.eventId)||{};const seat=[r.area,r.row,r.number].filter(Boolean).join(' · ')||'좌석 미기록';return `<article class="card"><div class="cardhead"><div><h3>${esc(fmtDate(r.date))} · ${esc(e.time||'')}</h3><div class="hint">${esc(castName(e))}</div></div><button class="btn small danger" onclick="deleteRecord('${r.id}')">기록 삭제</button></div><div><span class="tag">${esc(seat)}</span>${r.ticket?`<span class="tag">${esc(r.ticket)}</span>`:''}</div>${r.memo?`<p style="font-size:13px;margin-bottom:0">${esc(r.memo)}</p>`:''}</article>`}).join(''):'<div class="empty">아직 관극 기록이 없습니다. 먼저 공연 일정을 추가한 다음, 위에서 공연을 선택하고 좌석 정보를 저장하세요.</div>';
+}
+function renderCastStats(){
+ const counts={};for(const r of data.records){const e=eventById(r.eventId)||{};const name=castName(e);counts[name]=(counts[name]||0)+1}
+ const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+ $('castStats').innerHTML=rows.length?rows.map(([n,c])=>`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:10px 0;font-size:13px"><span>${esc(n)}</span><b style="color:var(--wine)">${c} 회</b></div>`).join(''):'<div class="empty">관극 기록을 추가하면 이곳에 관람한 배우 조합별 횟수가 표시됩니다.</div>';
+}
+function render(){renderFilters();renderEvents();renderRecords();renderCastStats();updateStats()}
+function resetEventForm(){ $('eventForm').reset();$('eventId').value='';$('eventFormTitle').textContent='공연 일정 추가';}
+function editEvent(id){const e=eventById(id);if(!e)return;$('eventFormWrap').hidden=false;$('eventFormTitle').textContent='수정演出회次';$('eventId').value=e.id;$('eventDate').value=e.date||'';$('eventTime').value=e.time||'19:30';$('eventVenue').value=e.venue||'';$('eventActor1').value=e.actor1||'';$('eventActor2').value=e.actor2||'';$('eventActor3').value=e.actor3||'';$('eventMemo').value=e.memo||'';window.scrollTo({top:0,behavior:'smooth'})}
+function deleteEvent(id){if(!confirm('삭제这个회次？关联的관극 기록也会삭제。'))return;data.events=data.events.filter(e=>e.id!==id);data.records=data.records.filter(r=>r.eventId!==id);save()}
+function deleteRecord(id){if(!confirm('이 관극 기록을 삭제할까요?'))return;data.records=data.records.filter(r=>r.id!==id);save()}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))}));
+$('toggleEventForm').onclick=()=>{$('eventFormWrap').hidden=!$('eventFormWrap').hidden;if(!$('eventFormWrap').hidden)$('eventDate').focus()};
+$('cancelEvent').onclick=()=>{$('eventFormWrap').hidden=true;resetEventForm()};
+$('eventForm').onsubmit=e=>{e.preventDefault();const id=$('eventId').value||uid();const item={id,date:$('eventDate').value,time:$('eventTime').value,venue:$('eventVenue').value.trim(),actor1:$('eventActor1').value.trim(),actor2:$('eventActor2').value.trim(),actor3:$('eventActor3').value.trim(),memo:$('eventMemo').value.trim()};const i=data.events.findIndex(x=>x.id===id);if(i>=0)data.events[i]=item;else data.events.push(item);save();resetEventForm();$('eventFormWrap').hidden=true};
+$('castFilter').onchange=renderEvents;$('scheduleFilter').onchange=renderEvents;
+$('recordEvent').onchange=()=>{const e=eventById($('recordEvent').value);if(e)$('recordDate').value=e.date||''};
+$('recordForm').onsubmit=e=>{e.preventDefault();const eventId=$('recordEvent').value;if(!eventById(eventId)){alert('먼저 등록된 공연을 선택해 주세요.');return}data.records.push({id:uid(),eventId,date:$('recordDate').value,area:$('seatArea').value.trim(),row:$('seatRow').value.trim(),number:$('seatNumber').value.trim(),ticket:$('recordTicket').value.trim(),memo:$('recordMemo').value.trim()});save();$('recordForm').reset()};
+$('clearRecord').onclick=()=>$('recordForm').reset();
+function download(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('exportJson').onclick=()=>download('let-me-fly-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+$('importJson').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!Array.isArray(x.events)||!Array.isArray(x.records))throw Error('파일 형식이 올바르지 않습니다');if(!confirm('백업을 가져오면 현재 데이터가 모두 대체됩니다. 계속할까요?'))return;data=x;save();alert('백업을 복원했습니다.')}catch(err){alert('가져오기에 실패했습니다. 이 웹사이트에서 내보낸 JSON 파일인지 확인해 주세요.')}finally{e.target.value=''}};
+$('clearAll').onclick=()=>{if(confirm('모든 공연 일정과 관극 기록을 삭제할까요? 이 작업은 되돌릴 수 없습니다. 먼저 백업하는 것을 권장합니다.')){data={events:[],records:[]};save()}};
+$('exportPng').onclick=()=>{
+ const seen=data.records.length,dates=new Set(data.records.map(r=>r.date)).size,casts=new Set(data.records.map(r=>castName(eventById(r.eventId)||{}))).size;
+ const names=[...new Set(data.records.map(r=>castName(eventById(r.eventId)||{})))].slice(0,4);
+ const escSvg=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+ const lines=names.length?names.map((n,i)=>`<text x="80" y="${600+i*35}" fill="#f5dce8" font-size="20">${escSvg(n)}</text>`).join(''):'<text x="80" y="600" fill="#f5dce8" font-size="20">하나씩 관극 기록을 채워 보세요 ✦</text>';
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="760"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#261c2b"/><stop offset="1" stop-color="#7b3859"/></linearGradient></defs><rect width="900" height="760" rx="30" fill="url(#g)"/><text x="80" y="80" fill="#eac8d9" font-size="18" letter-spacing="5">나의 뮤지컬 기록</text><text x="80" y="160" fill="#fff" font-family="Georgia,serif" font-size="68">렛미플라이</text><text x="80" y="205" fill="#e5d5e2" font-size="20">나의 관극 기록</text><path d="M80 255H820" stroke="#ffffff55"/><text x="80" y="330" fill="#fff" font-size="54">${seen}</text><text x="80" y="365" fill="#e5d5e2" font-size="18">관극 횟수</text><text x="365" y="330" fill="#fff" font-size="54">${dates}</text><text x="365" y="365" fill="#e5d5e2" font-size="18">관극 날짜</text><text x="650" y="330" fill="#fff" font-size="54">${casts}</text><text x="650" y="365" fill="#e5d5e2" font-size="18">캐스트 조합</text><path d="M80 420H820" stroke="#ffffff55"/><text x="80" y="485" fill="#fff" font-size="22">내가 만난 캐스트</text>${lines}<text x="80" y="710" fill="#cbb7c9" font-size="16">사랑을 담아 · 나의 렛미플라이 관극 기록</text></svg>`;
+ const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=900;c.height=760;c.getContext('2d').drawImage(img,0,0);URL.revokeObjectURL(url);c.toBlob(b=>download('let-me-fly-stats.png',b),'image/png')};img.onerror=()=>{URL.revokeObjectURL(url);alert('PNG 생성에 실패했습니다. SVG를 지원하는 최신 브라우저에서 다시 시도해 주세요.')};img.src=url;
+};
+load();render();
+</script>
+</body>
+</html>
