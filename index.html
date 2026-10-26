@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17131d">
+<title>렛미플라이 · 관극 기록</title>
+<style>
+:root{--bg:#f6f2f5;--paper:#fffdfd;--ink:#241d2a;--muted:#817786;--line:#e8dfe8;--wine:#7b3859;--pink:#e8c7d8;--gold:#b88b4a;--shadow:0 12px 34px #32203512}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#f0dce6 0,transparent 32rem),var(--bg);color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#211a28;color:#fff;padding:30px max(20px,calc((100vw - 1080px)/2)) 26px;position:relative;overflow:hidden}header:after{content:"✦";position:absolute;right:7%;top:-38px;font-size:170px;color:#ffffff0b}
+.eyebrow{font-size:11px;letter-spacing:.24em;color:#e9c4d7;text-transform:uppercase}h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(34px,7vw,54px);margin:8px 0 5px;letter-spacing:-.04em}.sub{color:#d8cddc;font-size:13px}.wrap{max-width:1080px;margin:auto;padding:22px 18px 60px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:-1px}.stat{background:var(--paper);padding:17px 18px;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.stat b{display:block;font-size:26px;color:var(--wine);font-weight:650}.stat span{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:22px 0 15px}.tab{white-space:nowrap;border:1px solid var(--line);border-radius:999px;background:#fff;padding:10px 16px;color:var(--muted);cursor:pointer}.tab.active{background:var(--wine);border-color:var(--wine);color:white}
+.panel{display:none}.panel.active{display:block}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}.cardhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0 0 8px}.hint{color:var(--muted);font-size:12px;line-height:1.6}
+label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #ded3df;border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:14px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--wine);box-shadow:0 0 0 3px #7b38591a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field{min-width:0}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.btn{border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 14px;font-size:13px;color:var(--ink);cursor:pointer}.btn.primary{background:var(--wine);color:#fff;border-color:var(--wine)}.btn.soft{background:#f8edf3;color:var(--wine);border-color:#edd5e2}.btn.danger{color:#a33a50}.btn.small{padding:6px 9px;font-size:12px}.list{display:grid;gap:10px}.event{display:grid;grid-template-columns:86px 1fr auto;gap:13px;align-items:start;border:1px solid var(--line);border-radius:14px;padding:13px;background:white}.datebox{background:#f7eaf1;border-radius:11px;padding:10px 6px;text-align:center;color:var(--wine)}.datebox strong{display:block;font-size:20px}.datebox span{font-size:10px}.eventtitle{font-weight:650;margin:2px 0 6px}.tag{display:inline-block;background:#f2edf3;border-radius:999px;padding:4px 8px;font-size:11px;color:#65566b;margin:2px 3px 2px 0}.tag.done{background:#e4f1e8;color:#386448}.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px;font-size:13px}.footer{text-align:center;color:var(--muted);font-size:11px;padding-top:26px}.divider{height:1px;background:var(--line);margin:17px 0}.filelabel{display:inline-flex;align-items:center;gap:8px}
+@media(max-width:650px){header{padding-top:24px}.stats{gap:7px}.stat{padding:13px 10px}.stat b{font-size:22px}.stat span{font-size:10px}.grid,.grid.three{grid-template-columns:1fr 1fr}.event{grid-template-columns:64px 1fr}.event>.eventactions{grid-column:2}.datebox strong{font-size:17px}.card{padding:15px}.event{gap:9px;padding:10px}}
+@media(max-width:420px){.grid,.grid.three{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">MY MUSICAL ARCHIVE · 2026</div><h1>렛미플라이</h1><div class="sub">관극 기록장 · Every show leaves a little light.</div></header>
+<main class="wrap">
+<section class="stats">
+ <div class="stat"><b id="statSeen">0</b><span>관극 횟수 · 看过场次</span></div>
+ <div class="stat"><b id="statShows">0</b><span>관극한 날짜 · 看过日期</span></div>
+ <div class="stat"><b id="statCast">0</b><span>기록한 캐스트 · 记录过的演员组合</span></div>
+</section>
+<nav class="tabs" aria-label="页面导航">
+ <button class="tab active" data-tab="schedule">出演日程</button><button class="tab" data-tab="records">观剧记录</button><button class="tab" data-tab="stats">统计与导出</button><button class="tab" data-tab="backup">备份与设置</button>
+</nav>
+<section id="schedule" class="panel active">
+ <div class="card">
+  <div class="cardhead"><h2>日程 / Schedule</h2><button class="btn soft" id="toggleEventForm">＋ 添加场次</button></div>
+  <div class="grid">
+   <div class="field"><label for="castFilter">按演员筛选（任意演员）</label><select id="castFilter"><option value="">全部演员</option></select></div>
+   <div class="field"><label for="scheduleFilter">显示</label><select id="scheduleFilter"><option value="all">全部场次</option><option value="upcoming">未记录场次</option><option value="seen">已观剧场次</option></select></div>
+  </div>
+  <div id="eventFormWrap" hidden>
+   <div class="divider"></div><h3 id="eventFormTitle">添加演出场次</h3>
+   <form id="eventForm">
+    <input type="hidden" id="eventId">
+    <div class="grid three">
+     <div class="field"><label for="eventDate">日期</label><input id="eventDate" type="date" required></div>
+     <div class="field"><label for="eventTime">时间</label><select id="eventTime"><option>14:00</option><option>15:00</option><option>19:00</option><option>19:30</option><option>20:00</option><option>其他</option></select></div>
+     <div class="field"><label for="eventVenue">剧场 / 场馆</label><input id="eventVenue" placeholder="例如：예스24아트원"></div>
+    </div>
+    <div class="grid three" style="margin-top:13px">
+     <div class="field"><label for="eventActor1">演员 1</label><input id="eventActor1" placeholder="演员名"></div>
+     <div class="field"><label for="eventActor2">演员 2</label><input id="eventActor2" placeholder="演员名"></div>
+     <div class="field"><label for="eventActor3">演员 3 / 其他</label><input id="eventActor3" placeholder="演员名"></div>
+    </div>
+    <div class="field" style="margin-top:13px"><label for="eventMemo">备注（选填）</label><input id="eventMemo" placeholder="例如： 낮공 / 막공 / 양도받음"></div>
+    <div class="actions"><button class="btn primary" type="submit">保存场次</button><button class="btn" type="button" id="cancelEvent">取消</button></div>
+   </form>
+  </div>
+ </div>
+ <div id="eventList" class="list"></div>
+</section>
+<section id="records" class="panel">
+ <div class="card"><div class="cardhead"><h2>观剧记录 / My records</h2><span class="hint">每一场可以单独记录座位</span></div>
+ <form id="recordForm">
+  <div class="grid">
+   <div class="field"><label for="recordEvent">选择日程</label><select id="recordEvent" required></select></div>
+   <div class="field"><label for="recordDate">观剧日期（可手动填写）</label><input id="recordDate" type="date" required></div>
+  </div>
+  <div class="grid three" style="margin-top:13px">
+   <div class="field"><label for="seatArea">区域 / 구역</label><input id="seatArea" placeholder="例如：A구역"></div>
+   <div class="field"><label for="seatRow">排数 / 열</label><input id="seatRow" placeholder="例如：3열"></div>
+   <div class="field"><label for="seatNumber">座位号 / 번</label><input id="seatNumber" placeholder="例如：12번"></div>
+  </div>
+  <div class="grid" style="margin-top:13px">
+   <div class="field"><label for="recordTicket">票种 / 票价（选填）</label><input id="recordTicket" placeholder="例如：R석 / 40%"></div>
+   <div class="field"><label for="recordMemo">观剧感想 / 备注</label><input id="recordMemo" placeholder="记下这场的小事…"></div>
+  </div>
+  <div class="actions"><button class="btn primary" type="submit">保存观剧记录</button><button class="btn" type="button" id="clearRecord">清空表单</button></div>
+ </form></div>
+ <div id="recordList" class="list"></div>
+</section>
+<section id="stats" class="panel">
+ <div class="card"><div class="cardhead"><h2>我的观剧统计</h2><button class="btn primary" id="exportPng">导出 PNG 图片</button></div>
+ <div id="exportCard" style="padding:24px;border-radius:15px;background:linear-gradient(145deg,#261c2b,#5b3049);color:#fff">
+  <div style="font-size:11px;letter-spacing:.2em;color:#eac8d9">MY MUSICAL ARCHIVE</div><div style="font:42px Georgia,serif;margin:8px 0 4px">렛미플라이</div><div style="font-size:12px;color:#e5d5e2">MY THEATRE LOG</div>
+  <div class="divider" style="background:#ffffff35;margin:20px 0"></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+   <div><div id="pngSeen" style="font-size:32px">0</div><div style="font-size:11px;color:#e5d5e2">관극 횟수</div></div>
+   <div><div id="pngDates" style="font-size:32px">0</div><div style="font-size:11px;color:#e5d5e2">관극 날짜</div></div>
+   <div><div id="pngCasts" style="font-size:32px">0</div><div style="font-size:11px;color:#e5d5e2">캐스트 조합</div></div>
+  </div>
+  <div class="divider" style="background:#ffffff35;margin:20px 0"></div><div id="pngFavorite" style="font-size:13px;line-height:1.8">기록을 하나씩 채워보세요 ✦</div>
+  <div style="margin-top:18px;font-size:10px;color:#cbb7c9">Made with love · 나의 렛미플라이 관극 기록</div>
+ </div>
+ <p class="hint">导出图片会生成上方统计卡片 PNG。记录详情和座位信息不会自动公开。</p>
+ </div>
+ <div class="card"><h2>演员观剧次数</h2><div id="castStats" class="list" style="margin-top:14px"></div></div>
+</section>
+<section id="backup" class="panel">
+ <div class="card"><h2>备份与恢复</h2><p class="hint">数据默认只保存在当前浏览器。清理浏览器数据、更换手机或浏览器前，请先导出 JSON 备份。</p>
+ <div class="actions"><button class="btn primary" id="exportJson">导出 JSON 备份</button><label class="btn filelabel" for="importJson" style="margin:0;cursor:pointer">导入 JSON 恢复</label><input id="importJson" type="file" accept="application/json,.json" hidden></div>
+ <div class="divider"></div><h3>数据管理</h3><p class="hint">导入备份会用备份内容替换当前日程和观剧记录。建议先导出当前数据。</p>
+ <button class="btn danger" id="clearAll">清空所有数据</button></div>
+ <div class="card"><h2>使用说明</h2><p class="hint">① 在“出演日程”添加演出日期和演员。② 在“观剧记录”选择场次，填写座位和备注。③ 在“统计与导出”保存统计卡片。④ 定期导出 JSON 备份。此网页没有账号系统，浏览器本地保存的数据不会自动同步到其他设备。</p></div>
+</section>
+<div class="footer">렛미플라이 · 관극 기록장 · Personal fan-made tracker</div>
+</main>
+<script>
+const KEY='letmefly-tracker-v1';
+let data={events:[],records:[]};
+const $=id=>document.getElementById(id);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=s=>{if(!s)return '未定';const d=new Date(s+'T12:00:00');return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`};
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'{}');if(Array.isArray(x.events)&&Array.isArray(x.records))data=x}catch(e){}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function eventById(id){return data.events.find(e=>e.id===id)}
+function castName(e){return [e.actor1,e.actor2,e.actor3].filter(Boolean).join(' · ')||'未填写演员'}
+function recordFor(id){return data.records.find(r=>r.eventId===id)}
+function updateStats(){
+ const seen=data.records.length, dates=new Set(data.records.map(r=>r.date)).size, casts=new Set(data.records.map(r=>castName(eventById(r.eventId)||{}))).size;
+ $('statSeen').textContent=seen;$('statShows').textContent=dates;$('statCast').textContent=casts;
+ $('pngSeen').textContent=seen;$('pngDates').textContent=dates;$('pngCasts').textContent=casts;
+ $('pngFavorite').textContent=seen?`已留下 ${seen} 场记录。每一次相遇，都值得收藏 ✦`:'기록을 하나씩 채워보세요 ✦';
+}
+function renderFilters(){
+ const old=$('castFilter').value;const names=[...new Set(data.events.flatMap(e=>[e.actor1,e.actor2,e.actor3]).filter(Boolean))].sort();
+ $('castFilter').innerHTML='<option value="">全部演员</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');
+ $('castFilter').value=names.includes(old)?old:'';
+ $('recordEvent').innerHTML='<option value="">选择一个场次…</option>'+[...data.events].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(e=>`<option value="${e.id}">${esc(fmtDate(e.date))} ${esc(e.time||'')} · ${esc(castName(e))}</option>`).join('');
+}
+function renderEvents(){
+ const cast=$('castFilter').value, filter=$('scheduleFilter').value;
+ let list=[...data.events].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+ if(cast)list=list.filter(e=>[e.actor1,e.actor2,e.actor3].includes(cast));
+ if(filter==='seen')list=list.filter(e=>recordFor(e.id));if(filter==='upcoming')list=list.filter(e=>!recordFor(e.id));
+ $('eventList').innerHTML=list.length?list.map(e=>{const done=!!recordFor(e.id);return `<article class="event"><div class="datebox"><strong>${e.date?esc(e.date.slice(8,10)):'—'}</strong><span>${e.date?esc(e.date.slice(0,7).replace('-','.')):'DATE TBA'}</span></div><div><div class="eventtitle">${esc(e.time||'时间待定')} · ${esc(castName(e))}</div><div>${e.venue?`<span class="tag">${esc(e.venue)}</span>`:''}${done?'<span class="tag done">已观剧</span>':'<span class="tag">未记录</span>'}</div>${e.memo?`<div class="hint" style="margin-top:7px">${esc(e.memo)}</div>`:''}</div><div class="eventactions"><button class="btn small" onclick="editEvent('${e.id}')">编辑</button> <button class="btn small danger" onclick="deleteEvent('${e.id}')">删除</button></div></article>`}).join(''):'<div class="empty">还没有场次。点击「添加场次」开始记录，日期和演员都可以之后再修改。</div>';
+}
+function renderRecords(){
+ const list=[...data.records].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+ $('recordList').innerHTML=list.length?list.map(r=>{const e=eventById(r.eventId)||{};const seat=[r.area,r.row,r.number].filter(Boolean).join(' · ')||'未记录座位';return `<article class="card"><div class="cardhead"><div><h3>${esc(fmtDate(r.date))} · ${esc(e.time||'')}</h3><div class="hint">${esc(castName(e))}</div></div><button class="btn small danger" onclick="deleteRecord('${r.id}')">删除记录</button></div><div><span class="tag">${esc(seat)}</span>${r.ticket?`<span class="tag">${esc(r.ticket)}</span>`:''}</div>${r.memo?`<p style="font-size:13px;margin-bottom:0">${esc(r.memo)}</p>`:''}</article>`}).join(''):'<div class="empty">还没有观剧记录。先添加日程，再在上方选择场次并保存座位信息。</div>';
+}
+function renderCastStats(){
+ const counts={};for(const r of data.records){const e=eventById(r.eventId)||{};const name=castName(e);counts[name]=(counts[name]||0)+1}
+ const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+ $('castStats').innerHTML=rows.length?rows.map(([n,c])=>`<div style="display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:10px 0;font-size:13px"><span>${esc(n)}</span><b style="color:var(--wine)">${c} 场</b></div>`).join(''):'<div class="empty">记录观剧后，这里会统计你看过的演员组合。</div>';
+}
+function render(){renderFilters();renderEvents();renderRecords();renderCastStats();updateStats()}
+function resetEventForm(){ $('eventForm').reset();$('eventId').value='';$('eventFormTitle').textContent='添加演出场次';}
+function editEvent(id){const e=eventById(id);if(!e)return;$('eventFormWrap').hidden=false;$('eventFormTitle').textContent='编辑演出场次';$('eventId').value=e.id;$('eventDate').value=e.date||'';$('eventTime').value=e.time||'19:30';$('eventVenue').value=e.venue||'';$('eventActor1').value=e.actor1||'';$('eventActor2').value=e.actor2||'';$('eventActor3').value=e.actor3||'';$('eventMemo').value=e.memo||'';window.scrollTo({top:0,behavior:'smooth'})}
+function deleteEvent(id){if(!confirm('删除这个场次？关联的观剧记录也会删除。'))return;data.events=data.events.filter(e=>e.id!==id);data.records=data.records.filter(r=>r.eventId!==id);save()}
+function deleteRecord(id){if(!confirm('确定删除这条观剧记录？'))return;data.records=data.records.filter(r=>r.id!==id);save()}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))}));
+$('toggleEventForm').onclick=()=>{$('eventFormWrap').hidden=!$('eventFormWrap').hidden;if(!$('eventFormWrap').hidden)$('eventDate').focus()};
+$('cancelEvent').onclick=()=>{$('eventFormWrap').hidden=true;resetEventForm()};
+$('eventForm').onsubmit=e=>{e.preventDefault();const id=$('eventId').value||uid();const item={id,date:$('eventDate').value,time:$('eventTime').value,venue:$('eventVenue').value.trim(),actor1:$('eventActor1').value.trim(),actor2:$('eventActor2').value.trim(),actor3:$('eventActor3').value.trim(),memo:$('eventMemo').value.trim()};const i=data.events.findIndex(x=>x.id===id);if(i>=0)data.events[i]=item;else data.events.push(item);save();resetEventForm();$('eventFormWrap').hidden=true};
+$('castFilter').onchange=renderEvents;$('scheduleFilter').onchange=renderEvents;
+$('recordEvent').onchange=()=>{const e=eventById($('recordEvent').value);if(e)$('recordDate').value=e.date||''};
+$('recordForm').onsubmit=e=>{e.preventDefault();const eventId=$('recordEvent').value;if(!eventById(eventId)){alert('请先选择一个已添加的场次。');return}data.records.push({id:uid(),eventId,date:$('recordDate').value,area:$('seatArea').value.trim(),row:$('seatRow').value.trim(),number:$('seatNumber').value.trim(),ticket:$('recordTicket').value.trim(),memo:$('recordMemo').value.trim()});save();$('recordForm').reset()};
+$('clearRecord').onclick=()=>$('recordForm').reset();
+function download(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('exportJson').onclick=()=>download('let-me-fly-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+$('importJson').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!Array.isArray(x.events)||!Array.isArray(x.records))throw Error('格式不正确');if(!confirm('导入将替换当前所有数据，继续吗？'))return;data=x;save();alert('备份已恢复。')}catch(err){alert('导入失败：请确认这是本网站导出的 JSON 文件。')}finally{e.target.value=''}};
+$('clearAll').onclick=()=>{if(confirm('确定清空全部日程和观剧记录？此操作无法撤销，建议先备份。')){data={events:[],records:[]};save()}};
+$('exportPng').onclick=()=>{
+ const seen=data.records.length,dates=new Set(data.records.map(r=>r.date)).size,casts=new Set(data.records.map(r=>castName(eventById(r.eventId)||{}))).size;
+ const names=[...new Set(data.records.map(r=>castName(eventById(r.eventId)||{})))].slice(0,4);
+ const escSvg=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+ const lines=names.length?names.map((n,i)=>`<text x="80" y="${600+i*35}" fill="#f5dce8" font-size="20">${escSvg(n)}</text>`).join(''):'<text x="80" y="600" fill="#f5dce8" font-size="20">기록을 하나씩 채워보세요 ✦</text>';
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="760"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#261c2b"/><stop offset="1" stop-color="#7b3859"/></linearGradient></defs><rect width="900" height="760" rx="30" fill="url(#g)"/><text x="80" y="80" fill="#eac8d9" font-size="18" letter-spacing="5">MY MUSICAL ARCHIVE</text><text x="80" y="160" fill="#fff" font-family="Georgia,serif" font-size="68">렛미플라이</text><text x="80" y="205" fill="#e5d5e2" font-size="20">MY THEATRE LOG</text><path d="M80 255H820" stroke="#ffffff55"/><text x="80" y="330" fill="#fff" font-size="54">${seen}</text><text x="80" y="365" fill="#e5d5e2" font-size="18">관극 횟수</text><text x="365" y="330" fill="#fff" font-size="54">${dates}</text><text x="365" y="365" fill="#e5d5e2" font-size="18">관극 날짜</text><text x="650" y="330" fill="#fff" font-size="54">${casts}</text><text x="650" y="365" fill="#e5d5e2" font-size="18">캐스트 조합</text><path d="M80 420H820" stroke="#ffffff55"/><text x="80" y="485" fill="#fff" font-size="22">MY CAST MEMORIES</text>${lines}<text x="80" y="710" fill="#cbb7c9" font-size="16">Made with love · 나의 렛미플라이 관극 기록</text></svg>`;
+ const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=900;c.height=760;c.getContext('2d').drawImage(img,0,0);URL.revokeObjectURL(url);c.toBlob(b=>download('let-me-fly-stats.png',b),'image/png')};img.onerror=()=>{URL.revokeObjectURL(url);alert('PNG 생성에 실패했습니다。请使用支持 SVG 的现代浏览器重试。')};img.src=url;
+};
+load();render();
+</script>
+</body>
+</html>
